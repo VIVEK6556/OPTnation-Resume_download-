@@ -48,7 +48,7 @@ class Optnation:
                 if new_Hieght == last_Hieght:
                     break
                 last_Hieght = new_Hieght
-            read = open('Counter.json', 'r')
+            read = open('Counter_1.json', 'r')
             data = read.read()
             load = json.loads(data)
             self.details_cnt = load['cnt']
@@ -94,10 +94,10 @@ class Optnation:
                 button=WebDriverWait(self.driver,30).until(Ec.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
                 self.driver.execute_script("arguments[0].click();", button)
                 time.sleep(10)
-            with open('Counter.json') as f:
+            with open('Counter_1.json') as f:
                 data = json.load(f)
                 data["cnt"] = self.details_cnt
-                with open('Counter.json', 'w') as f:
+                with open('Counter_1.json', 'w') as f:
                     json.dump(data, f)
         else:
             last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
@@ -133,27 +133,46 @@ class Optnation:
             self.driver.get('https://www.optnation.com/'+i+'')
             soup=BeautifulSoup(self.driver.page_source,'lxml')
             link='https://www.optnation.com/'+i+''
-            basic_details=soup.find('div',{'class':'view_resumepage_header'})
-            name=basic_details.find('h1').text
-            address=basic_details.find_all('p')[0].text
-            mail_id=basic_details.find_all('p')[1].text
-            contact_no=basic_details.find_all('p')[2].text
-            work_details=soup.find('div',{'class':'view_resume_work'})
-            work_authorization_=work_details.find('h4')
-            work_authorization=work_authorization_.find('span').text
-            expected_Salary_=work_details.find('h3')
-            expected_salary=expected_Salary_.find('span').text
-            designation_=work_details.find_all('p')[0]
-            designation=designation_.findNext('span').text
-            key_skills_= work_details.find_all('p')[1]
-            key_skills=key_skills_.findNext('span').text
-            education_details_=soup.find('div',{'class':'view_resume_edu'})
-            education_details=education_details_.find_all('tr')[1]
-            degree=education_details.find_all('td')[0].text
-            college_university=education_details.find_all('td')[1].text
-            city=education_details.find_all('td')[2].text
-            started=education_details.find_all('td')[3].text
-            ending=education_details.find_all('td')[4].text
+            try:
+                basic_details = soup.find('div', {'class': 'view_resumepage_header'})
+                name = basic_details.find('h1').text
+                address = basic_details.find_all('p')[0].text
+                mail_id = basic_details.find_all('p')[1].text
+                contact_no = basic_details.find_all('p')[2].text
+            except:
+                name = 'NA'
+                address = 'NA'
+                mail_id = 'NA'
+                contact_no = 'NA'
+            try:
+                work_details = soup.find('div', {'class': 'view_resume_work'})
+                work_authorization_ = work_details.find('h4')
+                work_authorization = work_authorization_.find('span').text
+                expected_Salary_ = work_details.find('h3')
+                expected_salary = expected_Salary_.find('span').text
+                designation_ = work_details.find_all('p')[0]
+                designation = designation_.findNext('span').text
+                key_skills_ = work_details.find_all('p')[1]
+                key_skills = key_skills_.findNext('span').text
+            except:
+                work_authorization = 'NA'
+                expected_salary = 'NA'
+                designation = 'NA'
+                key_skills = 'NA'
+            try:
+                education_details_ = soup.find('div', {'class': 'view_resume_edu'})
+                education_details = education_details_.find_all('tr')[1]
+                degree = education_details.find_all('td')[0].text
+                college_university = education_details.find_all('td')[1].text
+                city = education_details.find_all('td')[2].text
+                started = education_details.find_all('td')[3].text
+                ending = education_details.find_all('td')[4].text
+            except:
+                degree = 'NA'
+                college_university = 'NA'
+                city = 'NA'
+                started = 'NA'
+                ending = 'NA'
             df = df.append(
                 {"URL":link, "Name":name, "Address": address, "Email": mail_id, "Phone": contact_no, "Work Authorization": work_authorization,
                  "Expected Salary": expected_salary, "Designation": designation, "Key Skills": key_skills, "Degree": degree,"College/University":college_university,
@@ -169,7 +188,7 @@ class Optnation:
                 if new_Hieght == last_Hieght:
                     break
                 last_Hieght = new_Hieght
-            read = open('Counter.json', 'r')
+            read = open('Counter_1.json', 'r')
             data = read.read()
             load = json.loads(data)
             self.url_cnt = load['cnt_1']
@@ -215,10 +234,10 @@ class Optnation:
                     Ec.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
                 self.driver.execute_script("arguments[0].click();", button)
                 time.sleep(10)
-            with open('Counter.json') as f:
+            with open('Counter_1.json') as f:
                 data = json.load(f)
                 data["cnt_1"] = self.url_cnt
-                with open('Counter.json', 'w') as f:
+                with open('Counter_1.json', 'w') as f:
                     json.dump(data, f)
             fd.to_excel(''+self.path+''+str(date.today())+'_url.xlsx')
         else:
@@ -246,7 +265,7 @@ class Optnation:
                         (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
                 self.driver.execute_script("arguments[0].click();", button)
                 time.sleep(10)
-            fd.to_excel('' + self.path + '' + str(date.today()) + '_url.xlsx')
+        fd.to_excel('' + self.path + '' + str(date.today()) + '_url.xlsx')
     def Download_Links(self):
         if not os.path.exists('' + self.path + '' + 'Download_pages/' + '' + str(dt.today())):
             try:
@@ -254,7 +273,7 @@ class Optnation:
                     os.makedirs('' + self.path + '' + 'Download_pages/' + '' + str(dt.today()))
             except OSError:
                 print('Error:Creating directory.' + ('' + self.path + '' + str(dt.today())))
-            read = open('Counter.json', 'r')
+            read = open('Counter_1.json', 'r')
             data = read.read()
             load = json.loads(data)
             self.cnt = load['cnt_2']
@@ -306,10 +325,10 @@ class Optnation:
                     Ec.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
                 self.driver.execute_script("arguments[0].click();", button)
                 time.sleep(10)
-            with open('Counter.json') as f:
+            with open('Counter_1.json') as f:
                 data = json.load(f)
                 data["cnt_2"] = self.cnt
-                with open('Counter.json', 'w') as f:
+                with open('Counter_1.json', 'w') as f:
                     json.dump(data, f)
         else:
             last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
