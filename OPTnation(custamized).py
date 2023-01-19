@@ -40,91 +40,30 @@ class Optnation:
             self.login()
     def Link_Scraping(self):
         number_of_links=int(input("Number_of_details:"))/10
-        if os.path.isfile('' + self.path + '' + str(dt.today()) + '.xlsx') == False:
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            read = open('Counter_1.json', 'r')
-            data = read.read()
-            load = json.loads(data)
-            self.details_cnt = load['cnt']
-            if self.details_cnt != 0:
-                last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                while True:
-                    self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                    time.sleep(2)
-                    new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    if new_Hieght == last_Hieght:
-                        break
-                    last_Hieght = new_Hieght
-                j = 0
-                while j != self.details_cnt:
-                    button = WebDriverWait(self.driver, 30).until(Ec.presence_of_element_located(
-                        (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                    self.driver.execute_script("arguments[0].click();", button)
-                    time.sleep(2)
-                    last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    while True:
-                        self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                        time.sleep(2)
-                        new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                        if new_Hieght == last_Hieght:
-                            break
-                        last_Hieght = new_Hieght
-                    j += 1
-            else:
-                pass
-            self.url_lst = []
-            self.date = []
-            cnt=0
-            while cnt<number_of_links:
-                soup=BeautifulSoup(self.driver.page_source,'lxml')
-                link=soup.find_all('div',{'class':'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url=i.findNext('a').get('href')
-                    date=i.findNext('p').text
-                    self.date.append(date)
-                    self.url_lst.append(url)
-                self.details_cnt+=1
-                cnt+=1
-                button=WebDriverWait(self.driver,30).until(Ec.presence_of_element_located((By.XPATH,'/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
-            with open('Counter_1.json') as f:
-                data = json.load(f)
-                data["cnt"] =self.details_cnt
-                with open('Counter_1.json', 'w') as f:
-                    json.dump(data, f)
-        else:
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            self.url_lst = []
-            self.date = []
-            cnt = 0
-            while cnt < number_of_links:
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url = i.findNext('a').get('href')
-                    date = i.findNext('p').text
-                    self.date.append(date)
-                    self.url_lst.append(url)
-                cnt += 1
-                button = WebDriverWait(self.driver, 30).until(Ec.presence_of_element_located(
-                    (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
+        last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+        while True:
+            self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            time.sleep(2)
+            new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+            if new_Hieght == last_Hieght:
+                break
+            last_Hieght = new_Hieght
+        self.url_lst = []
+        self.date = []
+        cnt = 0
+        while cnt < number_of_links:
+            soup = BeautifulSoup(self.driver.page_source, 'lxml')
+            link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
+            for i in link:
+                url = i.findNext('a').get('href')
+                date = i.findNext('p').text
+                self.date.append(date)
+                self.url_lst.append(url)
+            cnt += 1
+            button = WebDriverWait(self.driver, 30).until(Ec.presence_of_element_located(
+                (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
+            self.driver.execute_script("arguments[0].click();", button)
+            time.sleep(10)
         self.Details_Scraping()
     def Details_Scraping(self):
         df = pd.DataFrame({"URL":[''],"Name":[''],"Address":[''],"Email":[''],"Phone":[''],"Work Authorization":[''],
@@ -181,180 +120,60 @@ class Optnation:
         df.to_excel(''+self.path+''+str(date.today())+'.xlsx')
     def url_Scraping(self):
         number_of_links = int(input("Number_of_links:")) / 10
-        if os.path.isfile(''+self.path+''+str(date.today())+'_url.xlsx')== False:
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            read = open('Counter_1.json', 'r')
-            data = read.read()
-            load = json.loads(data)
-            self.url_cnt = load['cnt_1']
-            if self.url_cnt != 0:
-                last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                while True:
-                    self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                    time.sleep(2)
-                    new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    if new_Hieght == last_Hieght:
-                        break
-                    last_Hieght = new_Hieght
-                j = 0
-                while j != self.url_cnt:
-                    button = WebDriverWait(self.driver, 30).until(Ec.presence_of_element_located(
-                        (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                    self.driver.execute_script("arguments[0].click();", button)
-                    time.sleep(2)
-                    last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    while True:
-                        self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                        time.sleep(2)
-                        new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                        if new_Hieght == last_Hieght:
-                            break
-                        last_Hieght = new_Hieght
-                    j += 1
-            else:
-                pass
-            self.url_lst = []
-            cnt = 0
-            fd = pd.DataFrame({"URL": [''], "Page": ['']})
-            while cnt<number_of_links:
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url = i.findNext('a').get('href')
-                    link = 'https://www.optnation.com/' +url+ ''
-                    fd = fd.append({"URL": link, "Page": cnt+1}, ignore_index=True)
-                self.url_cnt+=1
-                cnt += 1
-                button = WebDriverWait(self.driver, 30).until(
-                    Ec.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
-            with open('Counter_1.json') as f:
-                data = json.load(f)
-                data["cnt_1"] = self.url_cnt
-                with open('Counter_1.json', 'w') as f:
-                    json.dump(data, f)
-        else:
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            self.url_lst = []
-            cnt = 0
-            fd = pd.DataFrame({"URL": [''], "Page": ['']})
-            while cnt < number_of_links:
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url = i.findNext('a').get('href')
-                    link = 'https://www.optnation.com/' + url + ''
-                    fd = fd.append({"URL": link, "Page": cnt + 1}, ignore_index=True)
-                cnt += 1
-                button = WebDriverWait(self.driver, 30).until(
-                    Ec.presence_of_element_located(
-                        (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
+        last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+        while True:
+            self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            time.sleep(2)
+            new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+            if new_Hieght == last_Hieght:
+                break
+            last_Hieght = new_Hieght
+        self.url_lst = []
+        cnt = 0
+        fd = pd.DataFrame({"URL": [''], "Page": ['']})
+        while cnt < number_of_links:
+            soup = BeautifulSoup(self.driver.page_source, 'lxml')
+            link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
+            for i in link:
+                url = i.findNext('a').get('href')
+                link = 'https://www.optnation.com/' + url + ''
+                fd = fd.append({"URL": link, "Page": cnt + 1}, ignore_index=True)
+            cnt += 1
+            button = WebDriverWait(self.driver, 30).until(
+                Ec.presence_of_element_located(
+                    (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
+            self.driver.execute_script("arguments[0].click();", button)
+            time.sleep(10)
         fd.to_excel('' + self.path + '' + str(date.today()) + '_url.xlsx')
     def Download_Links(self):
         download_link=int(input("Enter the no of resumes:"))/10
-        if not os.path.exists('' + self.path + '' + 'Download_pages/' + '' + str(dt.today())):
-            try:
-                if not os.path.exists('' + self.path + '' + 'Download_pages/' + '' + str(dt.today())):
-                    os.makedirs('' + self.path + '' + 'Download_pages/' + '' + str(dt.today()))
-            except OSError:
-                print('Error:Creating directory.' + ('' + self.path + '' + str(dt.today())))
-            read = open('Counter_1.json', 'r')
-            data = read.read()
-            load = json.loads(data)
-            self.cnt= load['cnt_2']
-            if self.cnt != 0:
-                last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                while True:
-                    self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                    time.sleep(2)
-                    new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    if new_Hieght == last_Hieght:
-                        break
-                    last_Hieght = new_Hieght
-                j = 0
-                while j != self.cnt:
-                    button = WebDriverWait(self.driver, 30).until(Ec.presence_of_element_located(
-                        (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                    self.driver.execute_script("arguments[0].click();", button)
-                    time.sleep(2)
-                    last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                    while True:
-                        self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                        time.sleep(2)
-                        new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                        if new_Hieght == last_Hieght:
-                            break
-                        last_Hieght = new_Hieght
-                    j += 1
-            else:
-                pass
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            self.url_lst = []
-            cnt=0
-            while cnt < download_link:
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url = i.findNext('a').get('href')
-                    self.url_lst.append(url)
-                self.cnt += 1
-                cnt+=1
-                button = WebDriverWait(self.driver, 30).until(
-                    Ec.presence_of_element_located((By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
-            with open('Counter_1.json') as f:
-                data = json.load(f)
-                data["cnt_2"] = self.cnt
-                with open('Counter_1.json', 'w') as f:
-                    json.dump(data, f)
-        else:
-            last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-            while True:
-                self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
-                new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
-                if new_Hieght == last_Hieght:
-                    break
-                last_Hieght = new_Hieght
-            self.url_lst = []
-            cnt = 0
-            while cnt < download_link:
-                soup = BeautifulSoup(self.driver.page_source, 'lxml')
-                link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
-                for i in link:
-                    url = i.findNext('a').get('href')
-                    self.url_lst.append(url)
-                cnt += 1
-                button = WebDriverWait(self.driver, 30).until(
-                    Ec.presence_of_element_located(
-                        (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
-                self.driver.execute_script("arguments[0].click();", button)
-                time.sleep(10)
+        try:
+            if not os.path.exists('' + self.path + '' + 'Download_pages/' + '' + str(dt.today())):
+                os.makedirs('' + self.path + '' + 'Download_pages/' + '' + str(dt.today()))
+        except OSError:
+            print('Error:Creating directory.' + ('' + self.path + '' + str(dt.today())))
+        last_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+        while True:
+            self.driver.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            time.sleep(2)
+            new_Hieght = self.driver.execute_script('return document.body.scrollHeight')
+            if new_Hieght == last_Hieght:
+                break
+            last_Hieght = new_Hieght
+        self.url_lst = []
+        cnt = 0
+        while cnt < download_link:
+            soup = BeautifulSoup(self.driver.page_source, 'lxml')
+            link = soup.find_all('div', {'class': 'job_cent_boxft resume_cent_boxft'})
+            for i in link:
+                url = i.findNext('a').get('href')
+                self.url_lst.append(url)
+            cnt += 1
+            button = WebDriverWait(self.driver, 30).until(
+                Ec.presence_of_element_located(
+                    (By.XPATH, '/html/body/div[3]/div[4]/div/div/div[1]/div[15]/ul/li[3]')))
+            self.driver.execute_script("arguments[0].click();", button)
+            time.sleep(10)
         self.Download_pages()
     def Download_pages(self):
         for i in self.url_lst:
